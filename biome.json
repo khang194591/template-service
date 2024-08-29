@@ -1,7 +1,8 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
   "files": {
-    "include": ["src", "test"]
+    "include": ["src", "test", "scripts"],
+    "ignore": ["dist"]
   },
   "formatter": {
     "enabled": true,
@@ -26,6 +27,11 @@
         "useAsConstAssertion": "error",
         "useBlockStatements": "off"
       }
+    }
+  },
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   }
 }

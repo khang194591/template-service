@@ -1,2 +1,2 @@
-export * from "./create-template-req.dto";
-export * from "./update-template-req.dto";
+export * from "./commands";
+export * from "./queries";

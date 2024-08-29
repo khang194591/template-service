@@ -1,10 +1,13 @@
-import { CreateTemplateCommandHandler } from "./create-template";
-import { UpdateTemplateCommandHandler } from "./update-template";
+import { Create__T__CommandHandler } from "./create-__t__";
+import { Delete__T__CommandHandler } from "./delete-__t__";
+import { Update__T__CommandHandler } from "./update-__t__";
 
-export * from "./create-template";
-export * from "./update-template";
+export * from "./create-__t__";
+export * from "./delete-__t__";
+export * from "./update-__t__";
 
-export const commands = [
-  CreateTemplateCommandHandler,
-  UpdateTemplateCommandHandler,
+export const CommandHandlers = [
+  Create__T__CommandHandler,
+  Delete__T__CommandHandler,
+  Update__T__CommandHandler,
 ];
