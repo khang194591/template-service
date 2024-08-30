@@ -18,7 +18,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky",
-    "generate": "yarn tsx ./scripts/generate.ts"
+    "generate": "yarn tsx ./scripts/generate.ts",
+    "libs:build": "npx meta git update && npx meta git checkout master --include-only src/libs && npx meta git pull --include-only src/libs",
+    "postinstall": "yarn libs:build"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

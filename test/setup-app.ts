@@ -44,15 +44,15 @@ beforeAll(async () => {
     }),
   );
 
-  const natsMicroserviceOptions = testApp
-    .get(ConfigService)
-    .get("microservices");
+  const natsUrl = testApp.get(ConfigService).get("NATS_URL");
 
-  testApp.connectMicroservice(natsMicroserviceOptions);
+  testApp.connectMicroservice({
+    transport: Transport.NATS,
+    options: { servers: [natsUrl] },
+  });
 
   testApp.startAllMicroservices();
 
-  testApp.startAllMicroservices();
   await testApp.init();
 
   await testApp.listen(0);
@@ -70,5 +70,6 @@ beforeAll(async () => {
 afterAll(async () => {
   if (global.testContext) {
     await global.testContext.app.close();
+    await global.testContext.client.close();
   }
 });

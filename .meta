@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "src/libs": "https://github.com/khang194591/backend-shared"
+  }
+}

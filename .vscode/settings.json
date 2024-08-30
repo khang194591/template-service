@@ -2,7 +2,6 @@
   "biome.lspBin": "../node_modules",
   "typescript.preferences.importModuleSpecifier": "relative",
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "biomejs.biome",
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
