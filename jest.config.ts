@@ -6,7 +6,14 @@ export default {
   setupFilesAfterEnv: ['./test/setup-app.ts'],
   testRegex: 'test.e2e.ts',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
+      {
+        jsc: {
+          target: 'es2021',
+        },
+      },
+    ],
   },
   collectCoverageFrom: ['./src/**/*.(t|j)s'],
   coveragePathIgnorePatterns: [
@@ -14,5 +21,10 @@ export default {
     '<rootDir>/src/main.ts',
     '.mock.ts',
     '.test.ts',
+    "libs"
   ],
+  moduleNameMapper: {
+    // '@share/common/(.*)': '<rootDir>/libs/common/$1',
+    '@share/common': '<rootDir>/src/libs/common',
+  },
 };

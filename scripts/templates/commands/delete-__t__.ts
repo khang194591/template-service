@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { plainToInstance } from "class-transformer";
 import { __T__Repository } from "../__t__.repository";
 import { __T__Service } from "../__t__.service";
 import { Delete__T__Dto, Delete__T__ResDto } from "../dto";
@@ -19,6 +20,6 @@ export class Delete__T__CommandHandler
   async execute({ data }: Delete__T__Command): Promise<Delete__T__ResDto> {
     console.log(data);
 
-    return {};
+    return plainToInstance(Delete__T__ResDto, {});
   }
 }

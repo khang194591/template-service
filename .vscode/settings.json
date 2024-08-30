@@ -1,17 +1,11 @@
 {
   "biome.lspBin": "../node_modules",
-  "typescript.preferences.importModuleSpecifier": "relative",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "cSpell.words": [
-    "biomejs",
-    "cqrs",
-    "nats",
-    "nestjs"
-  ],
+  "cSpell.words": ["biomejs", "cqrs", "nats", "nestjs", "swcrc", "todos"],
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   }

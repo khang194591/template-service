@@ -9,7 +9,11 @@ import { QueryHandlers } from "./queries";
 
 @Module({
   imports: [CqrsModule],
-  controllers: [__T__Controller, __T__CmdController],
+  controllers: [
+    __T__Controller,
+    __T__CmdController,
+    /** comment */
+  ],
   providers: [
     __T__Repository,
     __T__Service,

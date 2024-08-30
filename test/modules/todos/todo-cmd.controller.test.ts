@@ -4,23 +4,23 @@ import { lastValueFrom } from "rxjs";
 import { microserviceRequest } from "src/libs/common";
 
 const patterns = {
-  create: "__t__.create",
-  update: "__t__.update",
-  getDetail: "__t__.get-detail",
-  getList: "__t__.get-list",
-  delete: "__t__.delete",
+  create: "todo.create",
+  update: "todo.update",
+  getDetail: "todo.get-detail",
+  getList: "todo.get-list",
+  delete: "todo.delete",
 };
 
-describe("__T__CmdController", () => {
+describe("TodoCmdController", () => {
   let client: ClientProxy;
-  let __t__Id: string;
+  let todoId: string;
 
   beforeAll(async () => {
     client = global.testContext.client;
   });
 
   beforeEach(async () => {
-    __t__Id = faker.string.uuid();
+    todoId = faker.string.uuid();
   });
 
   describe(`Pattern ${patterns.getList}`, () => {
@@ -36,7 +36,7 @@ describe("__T__CmdController", () => {
   describe(`Pattern ${patterns.getDetail}`, () => {
     it("Should be success", async () => {
       const { success } = await lastValueFrom(
-        client.send(patterns.getDetail, microserviceRequest({ id: __t__Id })),
+        client.send(patterns.getDetail, microserviceRequest({ id: todoId })),
       );
 
       expect(success).toBeTruthy();
@@ -56,7 +56,7 @@ describe("__T__CmdController", () => {
   describe(`Pattern ${patterns.update}`, () => {
     it("Should be success", async () => {
       const { success } = await lastValueFrom(
-        client.send(patterns.update, microserviceRequest({ id: __t__Id })),
+        client.send(patterns.update, microserviceRequest({ id: todoId })),
       );
 
       expect(success).toBeTruthy();
@@ -66,7 +66,7 @@ describe("__T__CmdController", () => {
   describe(`Pattern ${patterns.delete}`, () => {
     it("Should be success", async () => {
       const { success } = await lastValueFrom(
-        client.send(patterns.delete, microserviceRequest({ id: __t__Id })),
+        client.send(patterns.delete, microserviceRequest({ id: todoId })),
       );
 
       expect(success).toBeTruthy();

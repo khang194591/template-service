@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { plainToInstance } from "class-transformer";
 import { __T__Repository } from "../__t__.repository";
 import { __T__Service } from "../__t__.service";
 import { Create__T__Dto, Create__T__ResDto } from "../dto";
@@ -19,6 +20,6 @@ export class Create__T__CommandHandler
   async execute({ data }: Create__T__Command): Promise<Create__T__ResDto> {
     console.log(data);
 
-    return {};
+    return plainToInstance(Create__T__ResDto, {});
   }
 }

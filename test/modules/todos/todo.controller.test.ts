@@ -4,10 +4,10 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { App } from "supertest/types";
 
-describe("__T__Controller", () => {
+describe("TodoController", () => {
   let app: INestApplication;
   let server: App;
-  let __t__Id: string;
+  let todoId: string;
 
   beforeAll(async () => {
     app = global.testContext.app;
@@ -15,48 +15,46 @@ describe("__T__Controller", () => {
   });
 
   beforeEach(async () => {
-    __t__Id = faker.string.uuid();
+    todoId = faker.string.uuid();
   });
 
-  describe("GET /__s__", () => {
+  describe("GET /todos", () => {
     it("Should be success", async () => {
       const { status } = await request(server)
-        .get("/__s__")
+        .get("/todos")
         .query(stringify({ page: 1, pageSize: 10 }));
 
       expect(status).toBe(HttpStatus.OK);
     });
   });
 
-  describe("GET /__s__/:id", () => {
+  describe("GET /todos/:id", () => {
     it("Should be success", async () => {
-      const { status } = await request(server).get(`/__s__/${__t__Id}`);
+      const { status } = await request(server).get(`/todos/${todoId}`);
 
       expect(status).toBe(HttpStatus.OK);
     });
   });
 
-  describe("POST /__s__", () => {
+  describe("POST /todos", () => {
     it("Should be success", async () => {
-      const { status } = await request(server).post("/__s__/").send({});
+      const { status } = await request(server).post("/todos/").send({});
 
       expect(status).toBe(HttpStatus.CREATED);
     });
   });
 
-  describe("PUT /__s__/:id", () => {
+  describe("PUT /todos/:id", () => {
     it("Should be success", async () => {
-      const { status } = await request(server)
-        .put(`/__s__/${__t__Id}`)
-        .send({});
+      const { status } = await request(server).put(`/todos/${todoId}`).send({});
 
       expect(status).toBe(HttpStatus.OK);
     });
   });
 
-  describe("DELETE /__s__/:id", () => {
+  describe("DELETE /todos/:id", () => {
     it("Should be success", async () => {
-      const { status } = await request(server).delete(`/__s__/${__t__Id}`);
+      const { status } = await request(server).delete(`/todos/${todoId}`);
 
       expect(status).toBe(HttpStatus.OK);
     });

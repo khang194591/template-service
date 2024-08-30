@@ -1,6 +1,11 @@
-import { Controller } from "@nestjs/common";
+import { Controller, UseFilters, UseInterceptors } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { MessagePattern } from "@nestjs/microservices";
+import {
+  MicroserviceExceptionFilter,
+  MicroserviceInterceptor,
+  MicroserviceRequest,
+} from "@shared/common";
 import {
   Create__T__Command,
   Delete__T__Command,
@@ -28,6 +33,8 @@ const patterns = {
 };
 
 @Controller()
+@UseInterceptors(MicroserviceInterceptor)
+@UseFilters(MicroserviceExceptionFilter)
 export class __T__CmdController {
   constructor(
     private readonly queryBus: QueryBus,
@@ -35,27 +42,37 @@ export class __T__CmdController {
   ) {}
 
   @MessagePattern(patterns.getList)
-  get__T__List(request: Get__T__ListQueryDto): Promise<Get__T__ListResDto> {
-    return this.queryBus.execute(new Get__T__ListQuery(request));
+  get__T__List(
+    request: MicroserviceRequest<Get__T__ListQueryDto>,
+  ): Promise<Get__T__ListResDto> {
+    return this.queryBus.execute(new Get__T__ListQuery(request.input));
   }
 
   @MessagePattern(patterns.getDetail)
-  get__T__(request: Get__T__QueryDto): Promise<Get__T__ListResDto> {
-    return this.queryBus.execute(new Get__T__Query(request));
+  get__T__(
+    request: MicroserviceRequest<Get__T__QueryDto>,
+  ): Promise<Get__T__ListResDto> {
+    return this.queryBus.execute(new Get__T__Query(request.input));
   }
 
   @MessagePattern(patterns.create)
-  create__T__(request: Create__T__Dto): Promise<Get__T__ResDto> {
-    return this.commandBus.execute(new Create__T__Command(request));
+  create__T__(
+    request: MicroserviceRequest<Create__T__Dto>,
+  ): Promise<Get__T__ResDto> {
+    return this.commandBus.execute(new Create__T__Command(request.input));
   }
 
   @MessagePattern(patterns.update)
-  update__T__(request: Update__T__Dto): Promise<Update__T__ResDto> {
-    return this.commandBus.execute(new Update__T__Command(request));
+  update__T__(
+    request: MicroserviceRequest<Update__T__Dto>,
+  ): Promise<Update__T__ResDto> {
+    return this.commandBus.execute(new Update__T__Command(request.input));
   }
 
   @MessagePattern(patterns.delete)
-  delete__T__(request: Delete__T__Dto): Promise<Delete__T__ResDto> {
-    return this.commandBus.execute(new Delete__T__Command(request));
+  delete__T__(
+    request: MicroserviceRequest<Delete__T__Dto>,
+  ): Promise<Delete__T__ResDto> {
+    return this.commandBus.execute(new Delete__T__Command(request.input));
   }
 }

@@ -1,4 +1,5 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+import { plainToInstance } from "class-transformer";
 import { __T__Repository } from "../__t__.repository";
 import { __T__Service } from "../__t__.service";
 import { Get__T__QueryDto, Get__T__ResDto } from "../dto";
@@ -17,6 +18,6 @@ export class Get__T__QueryHandler implements IQueryHandler<Get__T__Query> {
   async execute({ query }: Get__T__Query): Promise<Get__T__ResDto> {
     console.log(query);
 
-    return {};
+    return plainToInstance(Get__T__ResDto, {});
   }
 }
