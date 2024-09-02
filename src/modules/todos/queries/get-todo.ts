@@ -1,23 +1,32 @@
+import { NotFoundException } from "@nestjs/common";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
 import { plainToInstance } from "class-transformer";
-import { GetTodoQueryDto, GetTodoResDto } from "../dto";
-import { TodoRepository } from "../todo.repository";
+import { Repository } from "typeorm";
+import { GetTodoResDto } from "../dtos";
+import { Todo } from "../entities";
 import { TodoService } from "../todo.service";
 
 export class GetTodoQuery {
-  constructor(public readonly query: GetTodoQueryDto) {}
+  constructor(public readonly id: string) {}
 }
 
 @QueryHandler(GetTodoQuery)
 export class GetTodoQueryHandler implements IQueryHandler<GetTodoQuery> {
   constructor(
-    private readonly todoRepository: TodoRepository,
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
     private readonly todoService: TodoService,
   ) {}
 
-  async execute({ query }: GetTodoQuery): Promise<GetTodoResDto> {
-    console.log(query);
+  async execute(query: GetTodoQuery): Promise<GetTodoResDto> {
+    const { id } = query;
+    const todo = await this.todoRepository.findOne({ where: { id } });
 
-    return plainToInstance(GetTodoResDto, {});
+    if (!todo) {
+      throw new NotFoundException("Todo not found");
+    }
+
+    return plainToInstance(GetTodoResDto, todo);
   }
 }

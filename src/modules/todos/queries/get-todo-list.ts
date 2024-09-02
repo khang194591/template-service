@@ -1,7 +1,9 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
 import { plainToInstance } from "class-transformer";
-import { GetTodoListQueryDto, GetTodoListResDto } from "../dto";
-import { TodoRepository } from "../todo.repository";
+import { Repository } from "typeorm";
+import { GetTodoListQueryDto, GetTodoListResDto } from "../dtos";
+import { Todo } from "../entities";
 import { TodoService } from "../todo.service";
 
 export class GetTodoListQuery {
@@ -13,13 +15,20 @@ export class GetTodoListQueryHandler
   implements IQueryHandler<GetTodoListQuery>
 {
   constructor(
-    private readonly todoRepository: TodoRepository,
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
     private readonly todoService: TodoService,
   ) {}
 
   async execute({ query }: GetTodoListQuery): Promise<GetTodoListResDto> {
-    console.log(query);
+    const { limit, offset } = query;
 
-    return plainToInstance(GetTodoListResDto, { data: [], total: 0 });
+    const [items, total] = await this.todoRepository.findAndCount({
+      skip: offset,
+      take: limit,
+      order: { createdAt: "DESC" },
+    });
+
+    return plainToInstance(GetTodoListResDto, { data: items, total });
   }
 }

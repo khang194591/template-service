@@ -1,11 +1,14 @@
+import { NotFoundException } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
 import { plainToInstance } from "class-transformer";
-import { DeleteTodoDto, DeleteTodoResDto } from "../dto";
-import { TodoRepository } from "../todo.repository";
+import { Repository } from "typeorm";
+import { DeleteTodoResDto } from "../dtos";
+import { Todo } from "../entities";
 import { TodoService } from "../todo.service";
 
 export class DeleteTodoCommand {
-  constructor(public readonly data: DeleteTodoDto) {}
+  constructor(public readonly id: string) {}
 }
 
 @CommandHandler(DeleteTodoCommand)
@@ -13,13 +16,22 @@ export class DeleteTodoCommandHandler
   implements ICommandHandler<DeleteTodoCommand>
 {
   constructor(
-    private readonly todoRepository: TodoRepository,
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
     private readonly todoService: TodoService,
   ) {}
 
-  async execute({ data }: DeleteTodoCommand): Promise<DeleteTodoResDto> {
-    console.log(data);
+  async execute(command: DeleteTodoCommand): Promise<DeleteTodoResDto> {
+    const { id } = command;
 
-    return plainToInstance(DeleteTodoResDto, {});
+    const todo = await this.todoRepository.findOne({ where: { id } });
+
+    if (!todo) {
+      throw new NotFoundException("Todo not found");
+    }
+
+    await this.todoRepository.delete({ id });
+
+    return plainToInstance(DeleteTodoResDto, { id });
   }
 }

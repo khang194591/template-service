@@ -5,7 +5,18 @@
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "cSpell.words": ["biomejs", "cqrs", "nats", "nestjs", "swcrc", "todos"],
+  "cSpell.words": [
+    "biomejs",
+    "cqrs",
+    "cuid",
+    "datasource",
+    "dtos",
+    "nats",
+    "nestjs",
+    "swcrc",
+    "todos",
+    "typeorm"
+  ],
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   }

@@ -1,8 +1,10 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
 import { plainToInstance } from "class-transformer";
-import { __T__Repository } from "../__t__.repository";
+import { Repository } from "typeorm";
 import { __T__Service } from "../__t__.service";
-import { Create__T__Dto, Create__T__ResDto } from "../dto";
+import { Create__T__Dto, Create__T__ResDto } from "../dtos";
+import { __T__ } from "../entities";
 
 export class Create__T__Command {
   constructor(public readonly data: Create__T__Dto) {}
@@ -13,13 +15,16 @@ export class Create__T__CommandHandler
   implements ICommandHandler<Create__T__Command>
 {
   constructor(
-    private readonly __t__Repository: __T__Repository,
+    @InjectRepository(__T__)
+    private readonly __t__Repository: Repository<__T__>,
     private readonly __t__Service: __T__Service,
   ) {}
 
-  async execute({ data }: Create__T__Command): Promise<Create__T__ResDto> {
-    console.log(data);
+  async execute(command: Create__T__Command): Promise<Create__T__ResDto> {
+    const { data } = command;
 
-    return plainToInstance(Create__T__ResDto, {});
+    const __t__ = await this.__t__Repository.save(data);
+
+    return plainToInstance(Create__T__ResDto, { id: __t__.id });
   }
 }

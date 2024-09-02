@@ -56,11 +56,14 @@ class TemplateGenerator {
       .replace(/__S__/g, capitalize(plural(this.moduleName)))
       .split("\n");
 
+    // Remove need't lines
     return lines
       .filter((line) => {
+        // Remove comment
         if (line.includes("/** comment */")) {
           return false;
         }
+        // Remove CMD if need't
         if (!this.includePattern && line.includes("CmdController")) {
           return false;
         }
@@ -98,13 +101,14 @@ class TemplateGenerator {
       if (entry.isDirectory()) {
         this.traverseTemplates(entryPath, path.join(outputSubDir, entry.name));
       } else {
-        if (entry.name.includes(".test.ts")) {
+        if (entry.parentPath.includes("__test__")) {
           const testFilePath = path.join(
             __dirname,
             "..",
             "test",
             "modules",
             plural(this.moduleName.toLocaleLowerCase()),
+            outputSubDir.replace("__test__", ""),
             entry.name.replace(/__t__/g, this.moduleName.toLocaleLowerCase()),
           );
           this.generateFile(entryPath, testFilePath);

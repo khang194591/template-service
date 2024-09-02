@@ -4,25 +4,19 @@ import {
   Delete,
   Get,
   Param,
-  ParseUUIDPipe,
   Post,
   Put,
   Query,
 } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { ApiTags } from "@nestjs/swagger";
+import { UuidParams } from "@shared/common";
 import {
   Create__T__Command,
   Delete__T__Command,
   Update__T__Command,
 } from "./commands";
-import {
-  Create__T__Dto,
-  Delete__T__Dto,
-  Get__T__ListQueryDto,
-  Get__T__QueryDto,
-  Update__T__Dto,
-} from "./dto";
+import { Create__T__Dto, Get__T__ListQueryDto, Update__T__Dto } from "./dtos";
 import { Get__T__ListQuery, Get__T__Query } from "./queries";
 
 @Controller("__s__")
@@ -39,8 +33,8 @@ export class __T__Controller {
   }
 
   @Get(":id")
-  get__T__(@Param() param: Get__T__QueryDto) {
-    return this.queryBus.execute(new Get__T__Query(param));
+  get__T__(@Param() { id }: UuidParams) {
+    return this.queryBus.execute(new Get__T__Query(id));
   }
 
   @Post()
@@ -49,15 +43,12 @@ export class __T__Controller {
   }
 
   @Put(":id")
-  update__T__(
-    @Param("id", new ParseUUIDPipe()) id: string,
-    @Body() body: Update__T__Dto,
-  ) {
-    return this.commandBus.execute(new Update__T__Command({ ...body, id }));
+  update__T__(@Param() { id }: UuidParams, @Body() body: Update__T__Dto) {
+    return this.commandBus.execute(new Update__T__Command(id, body));
   }
 
   @Delete(":id")
-  delete__T__(@Param() param: Delete__T__Dto) {
-    return this.commandBus.execute(new Delete__T__Command(param));
+  delete__T__(@Param() { id }: UuidParams) {
+    return this.commandBus.execute(new Delete__T__Command(id));
   }
 }

@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8.0.34
+    restart: always
+    container_name: ${DATABASE_NAME}_database
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASS} # Root password for MySQL
+      - MYSQL_DATABASE=${DATABASE_NAME}       # Database name
+      - MYSQL_USER=${DATABASE_USER}           # Non-root user
+      - MYSQL_PASSWORD=${DATABASE_PASS}       # Non-root user's password
+    volumes:
+      - database_volumn:/var/lib/mysql
+    ports:
+      - "${DATABASE_PORT}:3306"
+
+volumes:
+  database_volumn:

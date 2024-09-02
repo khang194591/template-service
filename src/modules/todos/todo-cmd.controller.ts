@@ -6,6 +6,7 @@ import {
   MicroserviceInterceptor,
   MicroserviceRequest,
 } from "@shared/common";
+import { plainToInstance } from "class-transformer";
 import {
   CreateTodoCommand,
   DeleteTodoCommand,
@@ -13,15 +14,15 @@ import {
 } from "./commands";
 import {
   CreateTodoDto,
-  DeleteTodoDto,
+  DeleteTodoCmdDto,
   DeleteTodoResDto,
   GetTodoListQueryDto,
   GetTodoListResDto,
   GetTodoQueryDto,
   GetTodoResDto,
-  UpdateTodoDto,
+  UpdateTodoCmdDto,
   UpdateTodoResDto,
-} from "./dto";
+} from "./dtos";
 import { GetTodoListQuery, GetTodoQuery } from "./queries";
 
 const patterns = {
@@ -45,34 +46,40 @@ export class TodoCmdController {
   getTodoList(
     request: MicroserviceRequest<GetTodoListQueryDto>,
   ): Promise<GetTodoListResDto> {
-    return this.queryBus.execute(new GetTodoListQuery(request.input));
+    const payload = plainToInstance(GetTodoListQueryDto, request.input);
+    return this.queryBus.execute(new GetTodoListQuery(payload));
   }
 
   @MessagePattern(patterns.getDetail)
   getTodo(
     request: MicroserviceRequest<GetTodoQueryDto>,
-  ): Promise<GetTodoListResDto> {
-    return this.queryBus.execute(new GetTodoQuery(request.input));
+  ): Promise<GetTodoResDto> {
+    const { id } = plainToInstance(GetTodoQueryDto, request.input);
+    return this.queryBus.execute(new GetTodoQuery(id));
   }
 
   @MessagePattern(patterns.create)
   createTodo(
     request: MicroserviceRequest<CreateTodoDto>,
   ): Promise<GetTodoResDto> {
-    return this.commandBus.execute(new CreateTodoCommand(request.input));
+    const payload = plainToInstance(CreateTodoDto, request.input);
+
+    return this.commandBus.execute(new CreateTodoCommand(payload));
   }
 
   @MessagePattern(patterns.update)
   updateTodo(
-    request: MicroserviceRequest<UpdateTodoDto>,
+    request: MicroserviceRequest<UpdateTodoCmdDto>,
   ): Promise<UpdateTodoResDto> {
-    return this.commandBus.execute(new UpdateTodoCommand(request.input));
+    const { id, data } = plainToInstance(UpdateTodoCmdDto, request.input);
+    return this.commandBus.execute(new UpdateTodoCommand(id, data));
   }
 
   @MessagePattern(patterns.delete)
   deleteTodo(
-    request: MicroserviceRequest<DeleteTodoDto>,
+    request: MicroserviceRequest<DeleteTodoCmdDto>,
   ): Promise<DeleteTodoResDto> {
-    return this.commandBus.execute(new DeleteTodoCommand(request.input));
+    const { id } = plainToInstance(DeleteTodoCmdDto, request.input);
+    return this.commandBus.execute(new DeleteTodoCommand(id));
   }
 }

@@ -4,25 +4,19 @@ import {
   Delete,
   Get,
   Param,
-  ParseUUIDPipe,
   Post,
   Put,
   Query,
 } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { ApiTags } from "@nestjs/swagger";
+import { UuidParams } from "@shared/common";
 import {
   CreateTodoCommand,
   DeleteTodoCommand,
   UpdateTodoCommand,
 } from "./commands";
-import {
-  CreateTodoDto,
-  DeleteTodoDto,
-  GetTodoListQueryDto,
-  GetTodoQueryDto,
-  UpdateTodoDto,
-} from "./dto";
+import { CreateTodoDto, GetTodoListQueryDto, UpdateTodoDto } from "./dtos";
 import { GetTodoListQuery, GetTodoQuery } from "./queries";
 
 @Controller("todos")
@@ -39,8 +33,8 @@ export class TodoController {
   }
 
   @Get(":id")
-  getTodo(@Param() param: GetTodoQueryDto) {
-    return this.queryBus.execute(new GetTodoQuery(param));
+  getTodo(@Param() { id }: UuidParams) {
+    return this.queryBus.execute(new GetTodoQuery(id));
   }
 
   @Post()
@@ -49,15 +43,12 @@ export class TodoController {
   }
 
   @Put(":id")
-  updateTodo(
-    @Param("id", new ParseUUIDPipe()) id: string,
-    @Body() body: UpdateTodoDto,
-  ) {
-    return this.commandBus.execute(new UpdateTodoCommand({ ...body, id }));
+  updateTodo(@Param() { id }: UuidParams, @Body() body: UpdateTodoDto) {
+    return this.commandBus.execute(new UpdateTodoCommand(id, body));
   }
 
   @Delete(":id")
-  deleteTodo(@Param() param: DeleteTodoDto) {
-    return this.commandBus.execute(new DeleteTodoCommand(param));
+  deleteTodo(@Param() { id }: UuidParams) {
+    return this.commandBus.execute(new DeleteTodoCommand(id));
   }
 }

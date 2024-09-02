@@ -1,7 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { __T__Repository } from "./__t__.repository";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { __T__ } from "./entities";
 
 @Injectable()
 export class __T__Service {
-  constructor(private readonly __t__Repository: __T__Repository) {}
+  constructor(
+    @InjectRepository(__T__)
+    private readonly __t__Repository: Repository<__T__>,
+  ) {}
 }

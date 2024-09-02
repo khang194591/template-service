@@ -1,21 +1,17 @@
 import { Module } from "@nestjs/common";
 import { CqrsModule } from "@nestjs/cqrs";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { CommandHandlers } from "./commands";
+import { Todo } from "./entities";
 import { QueryHandlers } from "./queries";
 import { TodoCmdController } from "./todo-cmd.controller";
 import { TodoController } from "./todo.controller";
-import { TodoRepository } from "./todo.repository";
 import { TodoService } from "./todo.service";
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, TypeOrmModule.forFeature([Todo])],
   controllers: [TodoController, TodoCmdController],
-  providers: [
-    TodoRepository,
-    TodoService,
-    ...CommandHandlers,
-    ...QueryHandlers,
-  ],
+  providers: [TodoService, ...CommandHandlers, ...QueryHandlers],
   exports: [],
 })
 export class TodoModule {}

@@ -1,7 +1,9 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
 import { plainToInstance } from "class-transformer";
-import { CreateTodoDto, CreateTodoResDto } from "../dto";
-import { TodoRepository } from "../todo.repository";
+import { Repository } from "typeorm";
+import { CreateTodoDto, CreateTodoResDto } from "../dtos";
+import { Todo } from "../entities";
 import { TodoService } from "../todo.service";
 
 export class CreateTodoCommand {
@@ -13,13 +15,16 @@ export class CreateTodoCommandHandler
   implements ICommandHandler<CreateTodoCommand>
 {
   constructor(
-    private readonly todoRepository: TodoRepository,
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
     private readonly todoService: TodoService,
   ) {}
 
-  async execute({ data }: CreateTodoCommand): Promise<CreateTodoResDto> {
-    console.log(data);
+  async execute(command: CreateTodoCommand): Promise<CreateTodoResDto> {
+    const { data } = command;
 
-    return plainToInstance(CreateTodoResDto, {});
+    const todo = await this.todoRepository.save(data);
+
+    return plainToInstance(CreateTodoResDto, { id: todo.id });
   }
 }
