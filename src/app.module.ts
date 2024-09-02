@@ -8,7 +8,13 @@ const modules = [TodoModule];
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      expandVariables: true,
+      envFilePath: process.env.NODE_ENV
+        ? `.env.${process.env.NODE_ENV}`
+        : ".env",
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config) => ({
@@ -18,7 +24,7 @@ const modules = [TodoModule];
         username: config.getOrThrow("DATABASE_USER"),
         password: config.getOrThrow("DATABASE_PASS"),
         database: config.getOrThrow("DATABASE_NAME"),
-        entities: [join(__dirname, "/**/**.entity{.ts,.js}")],
+        entities: [join(__dirname, "/modules/**/**.entity{.ts,.js}")],
         synchronize: true,
       }),
     }),
