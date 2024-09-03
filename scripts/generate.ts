@@ -8,7 +8,8 @@ const capitalize = (s: string) => s && s[0].toUpperCase() + s.slice(1);
 class TemplateGenerator {
   private moduleName: string = "todo";
   private includeTest: boolean = true;
-  private includePattern: boolean = true;
+  private includeApiController: boolean = true;
+  private includeCmdController: boolean = true;
   private output: string;
   private templateDir: string;
   private outputDir: string;
@@ -20,7 +21,7 @@ class TemplateGenerator {
   }
 
   private async readInput() {
-    const moduleName = await input({
+    this.moduleName = await input({
       message: "Enter module name: ",
       default: "todo",
       transformer: (val) => val.toLowerCase(),
@@ -31,14 +32,23 @@ class TemplateGenerator {
       default: true,
     });
 
-    this.includePattern = await confirm({
-      message: "Include pattern",
+    this.includeApiController = await confirm({
+      message: "Include api controller",
+      default: true,
+    });
+
+    this.includeCmdController = await confirm({
+      message: "Include cmd controller",
       default: true,
     });
 
     this.output = await input({
       message: "Enter output dir: ",
-      default: path.join("src", "modules", plural(moduleName.toLowerCase())),
+      default: path.join(
+        "src",
+        "modules",
+        plural(this.moduleName.toLowerCase()),
+      ),
       transformer: (val) => val.toLowerCase(),
     });
 
@@ -56,15 +66,26 @@ class TemplateGenerator {
       .replace(/__S__/g, capitalize(plural(this.moduleName)))
       .split("\n");
 
-    // Remove need't lines
+    if (!filePath.includes("__t__.module.ts")) {
+      return lines.join("\n");
+    }
+
+    // Handle __t__.module.ts
     return lines
       .filter((line) => {
         // Remove comment
         if (line.includes("/** comment */")) {
           return false;
         }
-        // Remove CMD if need't
-        if (!this.includePattern && line.includes("CmdController")) {
+        // Remove CMD controller
+        if (!this.includeCmdController && line.includes("CmdController")) {
+          return false;
+        }
+        // Remove API controller
+        if (
+          !this.includeApiController &&
+          line.includes(`${capitalize(this.moduleName)}Controller`)
+        ) {
           return false;
         }
         return true;
@@ -88,7 +109,17 @@ class TemplateGenerator {
         return;
       }
 
-      if (entry.name.includes("-cmd.controller.") && !this.includePattern) {
+      if (
+        !this.includeCmdController &&
+        entry.name.includes("__t__-cmd.controller")
+      ) {
+        return;
+      }
+
+      if (
+        !this.includeApiController &&
+        entry.name.includes("__t__.controller")
+      ) {
         return;
       }
 

@@ -1,5 +1,4 @@
 import { stringify } from "querystring";
-import { faker } from "@faker-js/faker";
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { App } from "supertest/types";
@@ -22,7 +21,7 @@ describe("TodoController", () => {
   });
 
   beforeEach(async () => {
-    todoId = faker.string.uuid();
+    todoId = v4();
   });
 
   describe("GET /todos", () => {

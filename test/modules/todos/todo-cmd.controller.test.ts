@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 import { microserviceRequest } from "src/libs/common";
@@ -27,7 +26,7 @@ describe("TodoCmdController", () => {
   });
 
   beforeEach(async () => {
-    todoId = faker.string.uuid();
+    todoId = v4();
   });
 
   describe(`Pattern ${patterns.getList}`, () => {

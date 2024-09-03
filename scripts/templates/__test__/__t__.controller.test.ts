@@ -1,5 +1,4 @@
 import { stringify } from "querystring";
-import { faker } from "@faker-js/faker";
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { App } from "supertest/types";
@@ -22,7 +21,7 @@ describe("__T__Controller", () => {
   });
 
   beforeEach(async () => {
-    __t__Id = faker.string.uuid();
+    __t__Id = v4();
   });
 
   describe("GET /__s__", () => {
