@@ -10,6 +10,15 @@
       "options": {
         "swcrcPath": ".swcrc"
       }
-    }
+    },
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "classValidatorShim": false,
+          "introspectComments": true
+        }
+      }
+    ]
   }
 }
