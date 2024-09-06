@@ -1,6 +1,9 @@
+#!/bin/bash
+
 read -r -p "Enter service name: " service_name
 read -r -p "Do you want to install dependencies after cloning? (y/n): " install_now
 read -r -p "Do you want to initialize a new Git repository? (y/n): " init_git
+read -r -p "Do you want to initialize sample modules? (y/n): " init_sample_modules
 
 # Clone the repository
 git clone https://github.com/khang194591/template-service.git "${service_name}-service" && \
@@ -28,4 +31,15 @@ if [[ "$init_git" =~ ^[Yy]$ ]]; then
     echo "Initialized a new Git repository."
 else
     echo "You can initialize a Git repository later by running 'git init' inside the ${service_name}-service directory."
+fi
+
+# Optionally remove sample modules
+if [[ "$init_sample_modules" =~ ^[Nn]$ ]]; then
+    rm -rf src/modules
+    rm -rf test/modules
+    # Remove lines with 'TodoModule' in src/app.module.ts
+    sed -i'' '/TodoModule/d' src/app.module.ts
+    echo "Sample modules removed."
+else
+    echo "Sample modules will be kept."
 fi

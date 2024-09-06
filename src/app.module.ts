@@ -2,8 +2,7 @@ import { join } from "node:path";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-
-const modules = [];
+import { TodoModule } from "./modules/todos/todo.module";
 
 @Module({
   imports: [
@@ -27,7 +26,7 @@ const modules = [];
         synchronize: true,
       }),
     }),
-    ...modules,
+    TodoModule,
   ],
 })
 export class AppModule {}
